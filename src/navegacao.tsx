@@ -14,6 +14,7 @@ export const GRUPOS: GrupoNav[] = [
       // `exact` porque "/" é prefixo de toda rota.
       { key: "inicio", label: "Início", path: "/", icon: "home", exact: true },
       { key: "conteudos", label: "Conteúdos", path: "/conteudos", icon: "book" },
+      { key: "salvos", label: "Salvos", path: "/salvos", icon: "heart" },
     ],
   },
 ];

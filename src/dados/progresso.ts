@@ -19,3 +19,13 @@ export function desfazerConclusao(usuarioId: string, conteudoId: string): void {
     return { ...p, conteudos };
   });
 }
+
+/** Salva ou tira dos salvos. O mais recente fica no topo. Devolve se ficou salvo. */
+export function alternarSalvo(usuarioId: string, conteudoId: string): boolean {
+  let salvo = false;
+  mexer(usuarioId, (p) => {
+    salvo = !p.salvos.includes(conteudoId);
+    return { ...p, salvos: salvo ? [conteudoId, ...p.salvos] : p.salvos.filter((id) => id !== conteudoId) };
+  });
+  return salvo;
+}

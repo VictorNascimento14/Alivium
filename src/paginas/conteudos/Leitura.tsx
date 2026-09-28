@@ -5,7 +5,7 @@ import AvisoApoio from "@/componentes/AvisoApoio";
 import ConteudoCard from "@/componentes/ConteudoCard";
 import { linkDeConteudo } from "@/componentes/linkDeConteudo";
 import { TONS } from "@/componentes/tons";
-import { concluirConteudo, desfazerConclusao } from "@/dados/progresso";
+import { alternarSalvo, concluirConteudo, desfazerConclusao } from "@/dados/progresso";
 import { progressoDe, useEstado } from "@/dados/repositorio";
 import { TIPOS } from "@/dados/tipos";
 import { useSessao } from "@/sessao/useSessao";
@@ -38,7 +38,9 @@ export default function Leitura() {
 
   const conteudo = estado.conteudos.find((c) => c.id === id && c.publicado);
   const categoria = estado.categorias.find((c) => c.id === conteudo?.categoriaId);
-  const concluidoEm = conteudo ? progressoDe(estado, usuario?.id).conteudos[conteudo.id] : undefined;
+  const progresso = progressoDe(estado, usuario?.id);
+  const concluidoEm = conteudo ? progresso.conteudos[conteudo.id] : undefined;
+  const salvo = conteudo ? progresso.salvos.includes(conteudo.id) : false;
 
   const relacionados = useMemo(
     () =>
@@ -107,15 +109,31 @@ export default function Leitura() {
             aria-hidden="true"
             className={`pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full blur-3xl ${tom.halo}`}
           />
-          <div className="relative flex flex-wrap items-center gap-2">
-            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-semibold ${tom.pastilha}`}>
-              {categoria && <i className={categoria.icone} aria-hidden="true" />}
-              {categoria?.nome}
-            </span>
-            <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-foreground-500">
-              <i className={tipo.icone} aria-hidden="true" />
-              {tipo.rotulo} · {conteudo.minutos} min
-            </span>
+          <div className="relative flex items-start justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-semibold ${tom.pastilha}`}>
+                {categoria && <i className={categoria.icone} aria-hidden="true" />}
+                {categoria?.nome}
+              </span>
+              <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-foreground-500">
+                <i className={tipo.icone} aria-hidden="true" />
+                {tipo.rotulo} · {conteudo.minutos} min
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (alternarSalvo(usuario.id, conteudo.id)) toast("Salvo", "Está nos seus salvos para quando precisar.");
+              }}
+              aria-pressed={salvo}
+              aria-label={salvo ? "Tirar dos salvos" : "Salvar"}
+              className={`press grid h-11 w-11 shrink-0 cursor-pointer place-items-center rounded-full text-xl transition-colors duration-200 ${
+                salvo ? "bg-red-100 text-red-600" : "glass-pill text-foreground-600 hover:text-red-600"
+              }`}
+            >
+              {/* `key` troca com o estado: remonta o ícone e o `pop` toca de novo a cada toque. */}
+              <i key={String(salvo)} className={`${salvo ? "ri-heart-fill" : "ri-heart-line"} animate-pop`} aria-hidden="true" />
+            </button>
           </div>
           <h2 className="relative mt-4 text-[30px] font-extrabold leading-tight tracking-[-0.02em] text-foreground-950 md:text-[36px]">
             {conteudo.titulo}
@@ -162,7 +180,7 @@ export default function Leitura() {
                   key={c.id}
                   conteudo={c}
                   categoria={categoria}
-                  concluido={Boolean(progressoDe(estado, usuario.id).conteudos[c.id])}
+                  concluido={Boolean(progresso.conteudos[c.id])}
                   delay={stagger(i, 60)}
                   envolver={linkDeConteudo(c.id)}
                 />

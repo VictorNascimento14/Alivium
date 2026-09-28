@@ -5,6 +5,7 @@ import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
 import Biblioteca from "./paginas/conteudos/Biblioteca";
 import Leitura from "./paginas/conteudos/Leitura";
+import Salvos from "./paginas/conteudos/Salvos";
 import Inicio from "./paginas/inicio/Inicio";
 import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Inicio /> },
       { path: "/conteudos", element: <Biblioteca /> },
       { path: "/conteudos/:id", element: <Leitura /> },
+      { path: "/salvos", element: <Salvos /> },
     ],
   },
 ]);
