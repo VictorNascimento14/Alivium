@@ -1,4 +1,7 @@
-import { AnimatedNumber, Button, GlassCard, MeterBar, StatCard, stagger, toast } from "@/ui";
+import { AnimatedNumber, Button, GlassCard, Glyph, MeterBar, StatCard, stagger, toast } from "@/ui";
+import type { GlyphName } from "@/ui";
+
+const ICONES: GlyphName[] = ["home", "book", "compass", "pen", "heart", "leaf"];
 
 /**
  * Tela provisória: prova os primitivos antes de a casca e as rotas chegarem.
@@ -17,10 +20,17 @@ export default function App() {
           <Button onClick={() => toast("Tudo certo", "Os primitivos estão no ar.")}>Começar</Button>
           <Button variant="ghost">Saber mais</Button>
         </div>
+        <div className="mt-5 flex flex-wrap gap-3 text-primary-800">
+          {ICONES.map((n) => (
+            <span key={n} className="grid h-11 w-11 place-items-center rounded-full bg-primary-50" title={n}>
+              <Glyph name={n} size={20} />
+            </span>
+          ))}
+        </div>
       </GlassCard>
       <div className="grid gap-3.5 sm:grid-cols-2">
-        <StatCard label="Conteúdos" value={<AnimatedNumber value={24} />} icon="grid" delay={stagger(1)} />
-        <StatCard label="Jornadas" value={<AnimatedNumber value={4} />} icon="calendar" tone="mint" delay={stagger(2)} />
+        <StatCard label="Conteúdos" value={<AnimatedNumber value={24} />} icon="book" delay={stagger(1)} />
+        <StatCard label="Jornadas" value={<AnimatedNumber value={4} />} icon="compass" tone="mint" delay={stagger(2)} />
       </div>
       <GlassCard className="p-[26px]" delay={stagger(3)}>
         <MeterBar pct={64} label="Progresso de exemplo" />
