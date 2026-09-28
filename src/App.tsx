@@ -1,19 +1,34 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { RailLayout, ToastHost } from "@/ui";
-import { BARRA_CELULAR, CONTA, GRUPOS } from "./navegacao";
+import { ToastHost } from "@/ui";
+import Entrar from "./paginas/autenticacao/Entrar";
 import Inicio from "./paginas/inicio/Inicio";
+import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
+import LayoutLogado from "./sessao/LayoutLogado";
 
 /**
- * Toda tela com coluna lateral é filha da rota do `RailLayout`: ele monta a
- * coluna UMA vez e passa navegação, conta e "sair" às telas pelo contexto.
+ * Duas famílias de rota:
+ * - sem sessão (entrar, cadastro): fora da coluna, com `SomenteVisitante`;
+ * - com sessão: filhas do `LayoutLogado`, que monta a coluna UMA vez.
  *
  * `element` em JSX (`<Inicio />`), nunca a referência (`Inicio`) — a segunda
  * forma compila e quebra só em runtime.
  */
 const router = createBrowserRouter([
   {
-    element: <RailLayout grupos={GRUPOS} barraCelular={BARRA_CELULAR} conta={CONTA} />,
+    path: "/entrar",
+    element: (
+      <SomenteVisitante>
+        <Entrar />
+      </SomenteVisitante>
+    ),
+  },
+  {
+    element: (
+      <ExigeSessao>
+        <LayoutLogado />
+      </ExigeSessao>
+    ),
     children: [{ path: "/", element: <Inicio /> }],
   },
 ]);

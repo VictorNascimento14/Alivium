@@ -1,4 +1,4 @@
-import type { Conta, GrupoNav } from "@/ui";
+import type { GrupoNav } from "@/ui";
 
 /**
  * A navegação do app — a única coisa que a coluna lateral, a gaveta do celular
@@ -19,9 +19,3 @@ export const GRUPOS: GrupoNav[] = [
 
 /** Destinos da barra de baixo do celular, na ordem em que aparecem. */
 export const BARRA_CELULAR = ["inicio"];
-
-/** Provisório: a sessão de verdade entra no PR de sessão e rotas. */
-export const CONTA: Conta = {
-  nome: "Pessoa Exemplo",
-  papel: "Cuidando de si",
-};
