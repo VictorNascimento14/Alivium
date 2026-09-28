@@ -13,9 +13,10 @@ export const GRUPOS: GrupoNav[] = [
     itens: [
       // `exact` porque "/" é prefixo de toda rota.
       { key: "inicio", label: "Início", path: "/", icon: "home", exact: true },
+      { key: "conteudos", label: "Conteúdos", path: "/conteudos", icon: "book" },
     ],
   },
 ];
 
 /** Destinos da barra de baixo do celular, na ordem em que aparecem. */
-export const BARRA_CELULAR = ["inicio"];
+export const BARRA_CELULAR = ["inicio", "conteudos"];
