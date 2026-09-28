@@ -10,6 +10,7 @@ import Diario from "./paginas/diario/Diario";
 import Inicio from "./paginas/inicio/Inicio";
 import JornadaDetalhe from "./paginas/jornadas/JornadaDetalhe";
 import Jornadas from "./paginas/jornadas/Jornadas";
+import Progresso from "./paginas/progresso/Progresso";
 import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
 
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: "/jornadas", element: <Jornadas /> },
       { path: "/jornadas/:id", element: <JornadaDetalhe /> },
       { path: "/diario", element: <Diario /> },
+      { path: "/progresso", element: <Progresso /> },
     ],
   },
 ]);

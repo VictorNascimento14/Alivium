@@ -16,10 +16,11 @@ export const GRUPOS: GrupoNav[] = [
       { key: "conteudos", label: "Conteúdos", path: "/conteudos", icon: "book" },
       { key: "jornadas", label: "Jornadas", path: "/jornadas", icon: "compass" },
       { key: "diario", label: "Diário", path: "/diario", icon: "pen" },
+      { key: "progresso", label: "Progresso", path: "/progresso", icon: "chart" },
       { key: "salvos", label: "Salvos", path: "/salvos", icon: "heart" },
     ],
   },
 ];
 
 /** Destinos da barra de baixo do celular, na ordem em que aparecem. */
-export const BARRA_CELULAR = ["inicio", "conteudos", "jornadas", "diario"];
+export const BARRA_CELULAR = ["inicio", "conteudos", "jornadas", "diario", "progresso"];
