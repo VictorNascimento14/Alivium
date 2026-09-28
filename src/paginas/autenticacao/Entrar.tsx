@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
 
+import { useEstado } from "@/dados/repositorio";
 import { entrar } from "@/dados/usuarios";
 import { Button, TextField, toast } from "@/ui";
 import LayoutAutenticacao from "./LayoutAutenticacao";
@@ -17,6 +18,9 @@ export default function Entrar() {
   const [senha, setSenha] = useState("");
   const [verSenha, setVerSenha] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  // Só as demonstrações que ainda existem: a conta pode ter sido apagada no Perfil.
+  const usuarios = useEstado().usuarios;
+  const demos = DEMOS.filter((d) => usuarios.some((u) => u.email === d.email));
 
   function enviar(e: FormEvent) {
     e.preventDefault();
@@ -87,31 +91,33 @@ export default function Entrar() {
         </Button>
       </form>
 
-      <div className="mt-7">
-        <p className="text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-foreground-500">
-          Explorar com uma conta de demonstração
-        </p>
-        <div className="mt-3 grid grid-cols-2 gap-2.5">
-          {DEMOS.map((d) => (
-            <button
-              key={d.email}
-              type="button"
-              onClick={() => {
-                setEmail(d.email);
-                setSenha("alivium123");
-                setErro(null);
-              }}
-              className="glass-inset press lift flex cursor-pointer items-center gap-2.5 rounded-[18px] px-3.5 py-3 text-left"
-            >
-              <i className={`${d.icone} text-lg text-primary-700`} aria-hidden="true" />
-              <span className="min-w-0">
-                <span className="block text-[13px] font-semibold text-foreground-900">{d.rotulo}</span>
-                <span className="block truncate text-[11px] text-foreground-500">{d.email}</span>
-              </span>
-            </button>
-          ))}
+      {demos.length > 0 && (
+        <div className="mt-7">
+          <p className="text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-foreground-500">
+            Explorar com uma conta de demonstração
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-2.5">
+            {demos.map((d) => (
+              <button
+                key={d.email}
+                type="button"
+                onClick={() => {
+                  setEmail(d.email);
+                  setSenha("alivium123");
+                  setErro(null);
+                }}
+                className="glass-inset press lift flex cursor-pointer items-center gap-2.5 rounded-[18px] px-3.5 py-3 text-left"
+              >
+                <i className={`${d.icone} text-lg text-primary-700`} aria-hidden="true" />
+                <span className="min-w-0">
+                  <span className="block text-[13px] font-semibold text-foreground-900">{d.rotulo}</span>
+                  <span className="block truncate text-[11px] text-foreground-500">{d.email}</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </LayoutAutenticacao>
   );
 }

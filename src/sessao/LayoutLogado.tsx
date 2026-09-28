@@ -19,7 +19,11 @@ export default function LayoutLogado() {
   const conta = useMemo<Conta | undefined>(
     () =>
       usuario
-        ? { nome: usuario.nome, papel: usuario.papel === "admin" ? "Administração" : "Cuidando de si" }
+        ? {
+            nome: usuario.nome,
+            papel: usuario.papel === "admin" ? "Administração" : "Cuidando de si",
+            href: "/perfil",
+          }
         : undefined,
     [usuario],
   );
