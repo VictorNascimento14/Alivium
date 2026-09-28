@@ -29,3 +29,18 @@ export {
 } from "./lib/sidebarCollapsed";
 export { toast, assinarToasts, type Toast } from "./lib/toast";
 export { useInView } from "./hooks/useInView";
+
+// Primitivos
+export { default as AnimatedNumber } from "./base/AnimatedNumber";
+export { default as Avatar } from "./base/Avatar";
+export { default as Button } from "./base/Button";
+export { default as Calendar } from "./base/Calendar";
+export { default as Dropdown } from "./base/Dropdown";
+export { default as GlassCard } from "./base/GlassCard";
+export { default as GlassPill } from "./base/GlassPill";
+export { default as Glyph, type GlyphName } from "./base/Glyph";
+export { default as MeterBar } from "./base/MeterBar";
+export { default as Modal } from "./base/Modal";
+export { default as Reveal } from "./base/Reveal";
+export { default as StatCard, type StatTone } from "./base/StatCard";
+export { default as TextField } from "./base/TextField";
