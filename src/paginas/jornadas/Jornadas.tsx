@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 import JornadaCard from "@/componentes/JornadaCard";
 import { andamento } from "@/dados/jornadas";
@@ -34,7 +36,20 @@ export default function Jornadas() {
             <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-foreground-500">{g.titulo}</h2>
             <div className="mt-3 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
               {g.itens.map(({ j, a }) => (
-                <JornadaCard key={j.id} jornada={j} andamento={a} delay={stagger(i++, 70)} />
+                <JornadaCard
+                  key={j.id}
+                  jornada={j}
+                  andamento={a}
+                  delay={stagger(i++, 70)}
+                  envolver={(cartao: ReactNode) => (
+                    <Link
+                      to={`/jornadas/${j.id}`}
+                      className="block h-full rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+                    >
+                      {cartao}
+                    </Link>
+                  )}
+                />
               ))}
             </div>
           </section>
