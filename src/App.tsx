@@ -7,6 +7,7 @@ import Biblioteca from "./paginas/conteudos/Biblioteca";
 import Leitura from "./paginas/conteudos/Leitura";
 import Salvos from "./paginas/conteudos/Salvos";
 import Inicio from "./paginas/inicio/Inicio";
+import JornadaDetalhe from "./paginas/jornadas/JornadaDetalhe";
 import Jornadas from "./paginas/jornadas/Jornadas";
 import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { path: "/conteudos/:id", element: <Leitura /> },
       { path: "/salvos", element: <Salvos /> },
       { path: "/jornadas", element: <Jornadas /> },
+      { path: "/jornadas/:id", element: <JornadaDetalhe /> },
     ],
   },
 ]);
