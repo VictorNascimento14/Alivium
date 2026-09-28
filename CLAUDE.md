@@ -71,7 +71,7 @@ e atualizá-lo faz parte da tarefa que descobriu a divergência, no **mesmo PR**
     `localStorage`** (fora do kit, que guarda tema e colapso da coluna).
   - `src/sessao/` — sessão do usuário e guardas de rota.
   - `src/paginas/<area>/` — telas. `src/componentes/` — peças reusadas por 2+ telas.
-- Checks: `npm run lint` · `npm run type-check` · `npm run build`. O CI roda os três.
+- Checks: `npm run lint` · `npm run type-check` · `npm test` (Vitest) · `npm run build`. O CI roda os quatro.
 - Textos da interface em **português do Brasil**, com acentuação correta.
 
 ---
@@ -188,7 +188,7 @@ Quando o usuário disser **"publicar"**, **"publique"** ou pedir para "abrir PR"
    `content/`, `docs/`, `chore/`.
 2. **Commit atômico (Conventional Commits)** — `tipo(escopo): descrição no imperativo`. Só os arquivos
    da mudança.
-3. **Checks locais**: `npm run lint && npm run type-check && npm run build`.
+3. **Checks locais**: `npm run lint && npm run type-check && npm test && npm run build`.
 4. **PR via `gh pr create`** — body com **O que muda** · **Por quê** · **Como testar**.
 5. **Cofre Obsidian** (`$ALIVIUM_VAULT`):
    - Nota do PR em `01 - PRs/2026/YYYY-MM-DD-pr-NNN-<slug>.md` (template `09 - Templates/template-pr.md`).
