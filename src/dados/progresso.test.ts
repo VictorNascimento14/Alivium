@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { concluirConteudo, desfazerConclusao } from "./progresso";
+import { alternarSalvo, concluirConteudo, desfazerConclusao } from "./progresso";
 import { lerEstado, progressoDe, restaurarSementes } from "./repositorio";
 
 describe("progresso de conteúdo", () => {
@@ -20,5 +20,17 @@ describe("progresso de conteúdo", () => {
     desfazerConclusao("u-pessoa", "a");
     expect(Object.keys(progressoDe(lerEstado(), "u-pessoa").conteudos)).toEqual(["b"]);
     expect(progressoDe(lerEstado(), "u-admin").conteudos.a).toBeDefined();
+  });
+});
+
+describe("salvos", () => {
+  beforeEach(() => restaurarSementes());
+
+  it("alterna e mantém o mais recente no topo", () => {
+    expect(alternarSalvo("u-pessoa", "a")).toBe(true);
+    alternarSalvo("u-pessoa", "b");
+    expect(progressoDe(lerEstado(), "u-pessoa").salvos).toEqual(["b", "a"]);
+    expect(alternarSalvo("u-pessoa", "a")).toBe(false);
+    expect(progressoDe(lerEstado(), "u-pessoa").salvos).toEqual(["b"]);
   });
 });
