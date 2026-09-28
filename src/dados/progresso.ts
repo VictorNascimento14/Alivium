@@ -1,10 +1,4 @@
-import { agora, atualizar, progressoDe } from "./repositorio";
-import type { Estado, Progresso } from "./tipos";
-
-/** Aplica `fn` ao progresso de uma pessoa, criando-o se ainda não existir. */
-function mexer(usuarioId: string, fn: (p: Progresso) => Progresso) {
-  atualizar((e: Estado) => ({ ...e, progresso: { ...e.progresso, [usuarioId]: fn(progressoDe(e, usuarioId)) } }));
-}
+import { agora, mexerProgresso as mexer } from "./repositorio";
 
 export function concluirConteudo(usuarioId: string, conteudoId: string): void {
   mexer(usuarioId, (p) =>
