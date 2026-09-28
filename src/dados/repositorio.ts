@@ -105,6 +105,11 @@ export function progressoDe(e: Estado, usuarioId: string | null | undefined): Pr
   return (usuarioId && e.progresso[usuarioId]) || PROGRESSO_VAZIO;
 }
 
+/** Aplica `fn` ao progresso de uma pessoa, criando-o se ainda não existir. */
+export function mexerProgresso(usuarioId: string, fn: (p: Progresso) => Progresso): void {
+  atualizar((e) => ({ ...e, progresso: { ...e.progresso, [usuarioId]: fn(progressoDe(e, usuarioId)) } }));
+}
+
 /** Id novo. `randomUUID` só existe em contexto seguro; em http de rede local cai no plano B. */
 export function novoId(prefixo: string): string {
   const uuid = globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
