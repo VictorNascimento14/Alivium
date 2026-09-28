@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ToastHost } from "@/ui";
+import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
 import Inicio from "./paginas/inicio/Inicio";
 import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
     element: (
       <SomenteVisitante>
         <Entrar />
+      </SomenteVisitante>
+    ),
+  },
+  {
+    path: "/cadastro",
+    element: (
+      <SomenteVisitante>
+        <Cadastro />
       </SomenteVisitante>
     ),
   },

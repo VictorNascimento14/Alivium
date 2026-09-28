@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { lerEstado, restaurarSementes } from "./repositorio";
 import { sha256 } from "./sha256";
-import { entrar, hashSenha, sair } from "./usuarios";
+import { cadastrar, entrar, forcaDaSenha, hashSenha, sair, validarCadastro } from "./usuarios";
 
 describe("sha256", () => {
   it("bate com os vetores conhecidos", () => {
@@ -39,5 +39,35 @@ describe("entrar e sair", () => {
     entrar("pessoa@exemplo.com", "alivium123");
     sair();
     expect(lerEstado().sessaoId).toBeNull();
+  });
+});
+
+describe("cadastrar", () => {
+  beforeEach(() => restaurarSementes());
+
+  it("cria a conta como pessoa e abre a sessão", () => {
+    const r = cadastrar({ nome: " Maria ", email: "Maria@Exemplo.com", senha: "umasenha1" });
+    expect(r.ok).toBe(true);
+    const u = lerEstado().usuarios.at(-1)!;
+    expect(u).toMatchObject({ nome: "Maria", email: "maria@exemplo.com", papel: "pessoa" });
+    expect(lerEstado().sessaoId).toBe(u.id);
+    // E a senha nova funciona para entrar de novo.
+    sair();
+    expect(entrar("maria@exemplo.com", "umasenha1").ok).toBe(true);
+  });
+
+  it("recusa e-mail repetido, senha curta e nome vazio", () => {
+    expect(validarCadastro({ nome: "", email: "pessoa@exemplo.com", senha: "123" })).toEqual({
+      nome: "Como podemos te chamar?",
+      email: "Já existe uma conta com este e-mail.",
+      senha: "Use pelo menos 8 caracteres.",
+    });
+    expect(cadastrar({ nome: "X", email: "x", senha: "1" }).ok).toBe(false);
+  });
+
+  it("mede a força da senha", () => {
+    expect(forcaDaSenha("")).toBe(0);
+    expect(forcaDaSenha("abc")).toBe(1);
+    expect(forcaDaSenha("Abcdefgh1!xyz")).toBe(4);
   });
 });

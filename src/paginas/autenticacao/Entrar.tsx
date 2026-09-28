@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 import { entrar } from "@/dados/usuarios";
 import { Button, TextField, toast } from "@/ui";
@@ -29,7 +30,18 @@ export default function Entrar() {
   }
 
   return (
-    <LayoutAutenticacao titulo="Bem-vindo(a) de volta" subtitulo="Entre para continuar de onde parou.">
+    <LayoutAutenticacao
+      titulo="Bem-vindo(a) de volta"
+      subtitulo="Entre para continuar de onde parou."
+      rodape={
+        <>
+          Ainda não tem conta?{" "}
+          <Link to="/cadastro" className="underline-grow font-semibold text-primary-800">
+            Criar conta
+          </Link>
+        </>
+      }
+    >
       <form onSubmit={enviar} className="flex flex-col gap-4" noValidate>
         <TextField
           label="E-mail"
