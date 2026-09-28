@@ -4,6 +4,7 @@ import { ToastHost } from "@/ui";
 import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
 import Biblioteca from "./paginas/conteudos/Biblioteca";
+import Leitura from "./paginas/conteudos/Leitura";
 import Inicio from "./paginas/inicio/Inicio";
 import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Inicio /> },
       { path: "/conteudos", element: <Biblioteca /> },
+      { path: "/conteudos/:id", element: <Leitura /> },
     ],
   },
 ]);

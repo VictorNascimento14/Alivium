@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import ConteudoCard from "@/componentes/ConteudoCard";
+import { linkDeConteudo } from "@/componentes/linkDeConteudo";
 import { paraBusca } from "@/componentes/texto";
 import { progressoDe, useEstado } from "@/dados/repositorio";
 import { TIPOS } from "@/dados/tipos";
@@ -134,6 +135,7 @@ export default function Biblioteca() {
                 categoria={estado.categorias.find((k) => k.id === c.categoriaId)}
                 concluido={Boolean(concluidos[c.id])}
                 delay={stagger(i, 60)}
+                envolver={linkDeConteudo(c.id)}
               />
             ))}
           </div>
