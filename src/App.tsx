@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastHost } from "@/ui";
 import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
+import Biblioteca from "./paginas/conteudos/Biblioteca";
 import Inicio from "./paginas/inicio/Inicio";
 import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
@@ -38,7 +39,10 @@ const router = createBrowserRouter([
         <LayoutLogado />
       </ExigeSessao>
     ),
-    children: [{ path: "/", element: <Inicio /> }],
+    children: [
+      { path: "/", element: <Inicio /> },
+      { path: "/conteudos", element: <Biblioteca /> },
+    ],
   },
 ]);
 
