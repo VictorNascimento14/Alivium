@@ -29,7 +29,14 @@ export type GlyphName =
   | "menu"
   | "close"
   | "chevron-down"
-  | "panel-left";
+  | "panel-left"
+  // Alivium — acrescentados no mesmo traçado 2.5 em caixa 24.
+  | "home"
+  | "book"
+  | "compass"
+  | "pen"
+  | "heart"
+  | "leaf";
 
 const PATHS: Record<GlyphName, ReactElement> = {
   grid: (
@@ -147,6 +154,38 @@ const PATHS: Record<GlyphName, ReactElement> = {
     <>
       <rect x="3.5" y="4.5" width="17" height="15" rx="4" />
       <path d="M9.5 4.5v15" />
+    </>
+  ),
+  home: (
+    <>
+      <path d="M4 10.5 12 4l8 6.5V18a2 2 0 0 1-2 2h-3.5v-5.5h-5V20H6a2 2 0 0 1-2-2z" />
+    </>
+  ),
+  book: (
+    <>
+      <path d="M12 6.5C10.3 5.2 8 4.5 4.5 4.5v13c3.5 0 5.8.7 7.5 2 1.7-1.3 4-2 7.5-2v-13c-3.5 0-5.8.7-7.5 2z" />
+      <path d="M12 6.5v13" />
+    </>
+  ),
+  compass: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="m15.5 8.5-2 5-5 2 2-5z" />
+    </>
+  ),
+  pen: (
+    <>
+      <path d="M14.5 5.5 18.5 9.5 9 19H5v-4z" />
+      <path d="M12.5 7.5l4 4" />
+    </>
+  ),
+  heart: (
+    <path d="M12 19.5s-7.5-4.3-7.5-9.7A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6c0 5.4-7.5 9.7-7.5 9.7z" />
+  ),
+  leaf: (
+    <>
+      <path d="M5 19c0-8 5-13.5 14.5-14-.3 9.5-5.8 14.5-13.5 14.5" />
+      <path d="M5 19c3-4 6-6.5 9.5-8.5" />
     </>
   ),
 };
