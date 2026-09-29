@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 
 import AvisoApoio from "@/componentes/AvisoApoio";
 import ConteudoCard from "@/componentes/ConteudoCard";
+import CorpoDoConteudo from "@/componentes/CorpoDoConteudo";
 import { linkDeConteudo } from "@/componentes/linkDeConteudo";
 import { TONS } from "@/componentes/tons";
 import { alternarSalvo, concluirConteudo, desfazerConclusao } from "@/dados/progresso";
@@ -140,17 +141,8 @@ export default function Leitura() {
           </h2>
           <p className="relative mt-3 text-[17px] leading-relaxed text-foreground-600">{conteudo.resumo}</p>
 
-          <div className="relative mt-8 flex flex-col gap-4 text-[16px] leading-[1.75] text-foreground-800">
-            {conteudo.corpo.map((p, i) =>
-              p.startsWith("• ") ? (
-                <p key={i} className="flex gap-3 pl-1">
-                  <span className="mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary-600" aria-hidden="true" />
-                  <span>{p.slice(2)}</span>
-                </p>
-              ) : (
-                <p key={i}>{p}</p>
-              ),
-            )}
+          <div className="relative mt-8">
+            <CorpoDoConteudo corpo={conteudo.corpo} />
           </div>
 
           <div className="relative mt-10 flex flex-wrap items-center gap-3 border-t border-foreground-950/[0.08] pt-6">

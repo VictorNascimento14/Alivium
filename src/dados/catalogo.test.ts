@@ -1,6 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { apagarCategoria, salvarCategoria } from "./catalogo";
+import {
+  alternarPublicacao,
+  apagarCategoria,
+  apagarConteudo,
+  corpoDeTexto,
+  salvarCategoria,
+  salvarConteudo,
+  textoDeCorpo,
+} from "./catalogo";
 import { lerEstado, restaurarSementes } from "./repositorio";
 
 const nova = { nome: "Movimento", descricao: "Corpo em movimento gentil.", icone: "ri-run-line", tom: "verde" as const };
@@ -30,5 +38,42 @@ describe("categorias", () => {
     if (!r.ok) throw new Error();
     expect(apagarCategoria(r.id).ok).toBe(true);
     expect(lerEstado().categorias.some((c) => c.id === r.id)).toBe(false);
+  });
+});
+
+describe("conteúdos", () => {
+  beforeEach(() => restaurarSementes());
+
+  const base = {
+    categoriaId: "c-corpo",
+    titulo: "Alongar com calma",
+    resumo: "Três alongamentos gentis para o fim do dia.",
+    corpo: ["Comece devagar."],
+    tipo: "pratica" as const,
+    minutos: 5,
+    publicado: false,
+  };
+
+  it("texto do editor vira parágrafos e listas, e volta igual", () => {
+    const texto = "Primeira linha\ncontinua aqui.\n\n- um\n- dois\n\nFim.";
+    const corpo = corpoDeTexto(texto);
+    expect(corpo).toEqual(["Primeira linha continua aqui.", "• um", "• dois", "Fim."]);
+    expect(corpoDeTexto(textoDeCorpo(corpo))).toEqual(corpo);
+  });
+
+  it("cria como rascunho, publica e valida categoria", () => {
+    const r = salvarConteudo(base);
+    if (!r.ok) throw new Error(r.erro);
+    alternarPublicacao(r.id);
+    expect(lerEstado().conteudos.find((c) => c.id === r.id)?.publicado).toBe(true);
+    expect(salvarConteudo({ ...base, categoriaId: "nao-existe" }).ok).toBe(false);
+    expect(salvarConteudo({ ...base, corpo: [] }).ok).toBe(false);
+  });
+
+  it("apagar solta a etapa da jornada sem apagá-la", () => {
+    apagarConteudo("t-respiracao-4-6");
+    const etapa = lerEstado().jornadas.find((j) => j.id === "j-respiro")!.etapas[0];
+    expect(etapa.id).toBe("e1");
+    expect(etapa.conteudoId).toBeUndefined();
   });
 });
