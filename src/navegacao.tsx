@@ -26,7 +26,10 @@ export const GRUPOS: GrupoNav[] = [
 export const GRUPO_ADMIN: GrupoNav = {
   chave: "admin",
   rotulo: "Administração",
-  itens: [{ key: "admin", label: "Painel", path: "/admin", icon: "shield-check", exact: true }],
+  itens: [
+    { key: "admin", label: "Painel", path: "/admin", icon: "shield-check", exact: true },
+    { key: "admin-categorias", label: "Categorias", path: "/admin/categorias", icon: "grid" },
+  ],
 };
 
 const GRUPOS_ADMIN = [...GRUPOS, GRUPO_ADMIN];
