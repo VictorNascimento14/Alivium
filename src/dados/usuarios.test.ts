@@ -2,7 +2,18 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { lerEstado, restaurarSementes } from "./repositorio";
 import { sha256 } from "./sha256";
-import { cadastrar, entrar, forcaDaSenha, hashSenha, sair, validarCadastro } from "./usuarios";
+import { registrarCheckin } from "./checkins";
+import {
+  apagarConta,
+  atualizarPerfil,
+  cadastrar,
+  entrar,
+  exportarDados,
+  forcaDaSenha,
+  hashSenha,
+  sair,
+  validarCadastro,
+} from "./usuarios";
 
 describe("sha256", () => {
   it("bate com os vetores conhecidos", () => {
@@ -69,5 +80,39 @@ describe("cadastrar", () => {
     expect(forcaDaSenha("")).toBe(0);
     expect(forcaDaSenha("abc")).toBe(1);
     expect(forcaDaSenha("Abcdefgh1!xyz")).toBe(4);
+  });
+});
+
+describe("perfil e privacidade", () => {
+  beforeEach(() => restaurarSementes());
+
+  it("atualiza nome e intenção; intenção vazia some", () => {
+    expect(atualizarPerfil("u-pessoa", { nome: " Ana ", intencao: "" }).ok).toBe(true);
+    const u = lerEstado().usuarios.find((x) => x.id === "u-pessoa")!;
+    expect(u.nome).toBe("Ana");
+    expect(u.intencao).toBeUndefined();
+    expect(atualizarPerfil("u-pessoa", { nome: "A", intencao: "" }).ok).toBe(false);
+  });
+
+  it("exporta sem o hash da senha", () => {
+    registrarCheckin("u-pessoa", 3, 1, "2026-09-28");
+    const d = exportarDados("u-pessoa")!;
+    expect(JSON.stringify(d)).not.toContain("senhaHash");
+    expect(d.checkins).toHaveLength(1);
+  });
+
+  it("apagar leva junto tudo da pessoa e encerra a sessão", () => {
+    entrar("pessoa@exemplo.com", "alivium123");
+    registrarCheckin("u-pessoa", 3, 1, "2026-09-28");
+    registrarCheckin("u-admin", 3, 1, "2026-09-28");
+    expect(apagarConta("u-pessoa").ok).toBe(true);
+    const e = lerEstado();
+    expect(e.usuarios.some((u) => u.id === "u-pessoa")).toBe(false);
+    expect(e.checkins.map((c) => c.usuarioId)).toEqual(["u-admin"]);
+    expect(e.sessaoId).toBeNull();
+  });
+
+  it("a última administração não se apaga", () => {
+    expect(apagarConta("u-admin").ok).toBe(false);
   });
 });

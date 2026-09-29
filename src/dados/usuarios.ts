@@ -77,3 +77,63 @@ export function cadastrar(c: NovoCadastro): Resultado<Usuario> {
   atualizar((e) => ({ ...e, usuarios: [...e.usuarios, usuario], sessaoId: usuario.id }));
   return { ok: true, valor: usuario };
 }
+
+export interface EdicaoPerfil {
+  nome: string;
+  intencao: string;
+}
+
+export function atualizarPerfil(usuarioId: string, p: EdicaoPerfil): Resultado<null> {
+  const nome = p.nome.trim();
+  const intencao = p.intencao.trim();
+  if (nome.length < 2 || nome.length > 80) return { ok: false, erro: "O nome precisa ter de 2 a 80 caracteres." };
+  if (intencao.length > 120) return { ok: false, erro: "A intenção vai até 120 caracteres." };
+  atualizar((e) => ({
+    ...e,
+    usuarios: e.usuarios.map((u) => (u.id === usuarioId ? { ...u, nome, intencao: intencao || undefined } : u)),
+  }));
+  return { ok: true, valor: null };
+}
+
+/** Tudo o que o app guarda sobre a pessoa, sem o hash da senha — direito de portabilidade (LGPD art. 18). */
+export function exportarDados(usuarioId: string) {
+  const e = lerEstado();
+  const u = e.usuarios.find((x) => x.id === usuarioId);
+  if (!u) return null;
+  // Lista explícita, não "tudo menos a senha": campo sensível novo não vaza por padrão.
+  const conta = { id: u.id, nome: u.nome, email: u.email, papel: u.papel, criadoEm: u.criadoEm, intencao: u.intencao };
+  return {
+    exportadoEm: new Date().toISOString(),
+    conta,
+    checkins: e.checkins.filter((c) => c.usuarioId === usuarioId),
+    diario: e.diario.filter((d) => d.usuarioId === usuarioId),
+    progresso: e.progresso[usuarioId] ?? null,
+  };
+}
+
+/**
+ * Apaga a conta e TUDO dela (check-ins, diário, progresso) e encerra a sessão.
+ * A última conta de administração não pode se apagar: o app ficaria sem quem
+ * cuide do conteúdo.
+ */
+export function apagarConta(usuarioId: string): Resultado<null> {
+  const e = lerEstado();
+  const u = e.usuarios.find((x) => x.id === usuarioId);
+  if (!u) return { ok: false, erro: "Conta não encontrada." };
+  if (u.papel === "admin" && e.usuarios.filter((x) => x.papel === "admin").length === 1) {
+    return { ok: false, erro: "Esta é a única conta de administração e não pode ser apagada." };
+  }
+  atualizar((atual) => {
+    const progresso = { ...atual.progresso };
+    delete progresso[usuarioId];
+    return {
+      ...atual,
+      usuarios: atual.usuarios.filter((x) => x.id !== usuarioId),
+      checkins: atual.checkins.filter((c) => c.usuarioId !== usuarioId),
+      diario: atual.diario.filter((d) => d.usuarioId !== usuarioId),
+      progresso,
+      sessaoId: atual.sessaoId === usuarioId ? null : atual.sessaoId,
+    };
+  });
+  return { ok: true, valor: null };
+}
