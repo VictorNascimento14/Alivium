@@ -1,0 +1,11 @@
+{
+  "name": "Alivium — Alívio da Dor",
+  "short_name": "Alivium",
+  "description": "Acolhimento, reflexão, cuidado e esperança — no seu tempo.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f8f5",
+  "theme_color": "#0b5a2e",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
