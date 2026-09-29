@@ -18,6 +18,8 @@ import JornadaDetalhe from "./paginas/jornadas/JornadaDetalhe";
 import Jornadas from "./paginas/jornadas/Jornadas";
 import Perfil from "./paginas/perfil/Perfil";
 import Progresso from "./paginas/progresso/Progresso";
+import ErroInesperado from "./paginas/sistema/ErroInesperado";
+import NaoEncontrada from "./paginas/sistema/NaoEncontrada";
 import { ExigeSessao, RotaAdmin, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
 
@@ -31,51 +33,58 @@ import LayoutLogado from "./sessao/LayoutLogado";
  */
 const router = createBrowserRouter([
   {
-    path: "/entrar",
-    element: (
-      <SomenteVisitante>
-        <Entrar />
-      </SomenteVisitante>
-    ),
-  },
-  {
-    path: "/cadastro",
-    element: (
-      <SomenteVisitante>
-        <Cadastro />
-      </SomenteVisitante>
-    ),
-  },
-  {
-    element: (
-      <ExigeSessao>
-        <LayoutLogado />
-      </ExigeSessao>
-    ),
+    // Raiz sem caminho só para dar a TODAS as rotas o mesmo `errorElement`.
+    errorElement: <ErroInesperado />,
     children: [
-      { path: "/", element: <Inicio /> },
-      { path: "/conteudos", element: <Biblioteca /> },
-      { path: "/conteudos/:id", element: <Leitura /> },
-      { path: "/salvos", element: <Salvos /> },
-      { path: "/jornadas", element: <Jornadas /> },
-      { path: "/jornadas/:id", element: <JornadaDetalhe /> },
-      { path: "/diario", element: <Diario /> },
-      { path: "/progresso", element: <Progresso /> },
-      { path: "/perfil", element: <Perfil /> },
       {
-        // Área administrativa: mesma coluna, guarda de papel por cima.
-        path: "/admin",
-        element: <RotaAdmin />,
+        path: "/entrar",
+        element: (
+          <SomenteVisitante>
+            <Entrar />
+          </SomenteVisitante>
+        ),
+      },
+      {
+        path: "/cadastro",
+        element: (
+          <SomenteVisitante>
+            <Cadastro />
+          </SomenteVisitante>
+        ),
+      },
+      {
+        element: (
+          <ExigeSessao>
+            <LayoutLogado />
+          </ExigeSessao>
+        ),
         children: [
-          { index: true, element: <PainelAdmin /> },
-          { path: "categorias", element: <AdminCategorias /> },
-          { path: "conteudos", element: <AdminConteudos /> },
-          // `novo` e um id caem na mesma tela: `EditorConteudo` decide pelo parâmetro.
-          { path: "conteudos/:id", element: <EditorConteudo /> },
-          { path: "jornadas", element: <AdminJornadas /> },
-          { path: "jornadas/:id", element: <EditorJornada /> },
+          { path: "/", element: <Inicio /> },
+          { path: "/conteudos", element: <Biblioteca /> },
+          { path: "/conteudos/:id", element: <Leitura /> },
+          { path: "/salvos", element: <Salvos /> },
+          { path: "/jornadas", element: <Jornadas /> },
+          { path: "/jornadas/:id", element: <JornadaDetalhe /> },
+          { path: "/diario", element: <Diario /> },
+          { path: "/progresso", element: <Progresso /> },
+          { path: "/perfil", element: <Perfil /> },
+          {
+            // Área administrativa: mesma coluna, guarda de papel por cima.
+            path: "/admin",
+            element: <RotaAdmin />,
+            children: [
+              { index: true, element: <PainelAdmin /> },
+              { path: "categorias", element: <AdminCategorias /> },
+              { path: "conteudos", element: <AdminConteudos /> },
+              // `novo` e um id caem na mesma tela: `EditorConteudo` decide pelo parâmetro.
+              { path: "conteudos/:id", element: <EditorConteudo /> },
+              { path: "jornadas", element: <AdminJornadas /> },
+              { path: "jornadas/:id", element: <EditorJornada /> },
+            ],
+          },
         ],
       },
+      { path: "*", element: <NaoEncontrada /> },
     ],
   },
 ]);
