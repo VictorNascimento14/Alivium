@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ToastHost } from "@/ui";
+import PainelAdmin from "./paginas/admin/PainelAdmin";
 import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
 import Biblioteca from "./paginas/conteudos/Biblioteca";
@@ -12,7 +13,7 @@ import JornadaDetalhe from "./paginas/jornadas/JornadaDetalhe";
 import Jornadas from "./paginas/jornadas/Jornadas";
 import Perfil from "./paginas/perfil/Perfil";
 import Progresso from "./paginas/progresso/Progresso";
-import { ExigeSessao, SomenteVisitante } from "./sessao/Guardas";
+import { ExigeSessao, RotaAdmin, SomenteVisitante } from "./sessao/Guardas";
 import LayoutLogado from "./sessao/LayoutLogado";
 
 /**
@@ -56,6 +57,12 @@ const router = createBrowserRouter([
       { path: "/diario", element: <Diario /> },
       { path: "/progresso", element: <Progresso /> },
       { path: "/perfil", element: <Perfil /> },
+      {
+        // Área administrativa: mesma coluna, guarda de papel por cima.
+        path: "/admin",
+        element: <RotaAdmin />,
+        children: [{ index: true, element: <PainelAdmin /> }],
+      },
     ],
   },
 ]);

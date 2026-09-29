@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useOutletContext } from "react-router-dom";
 
 import { useSessao } from "./useSessao";
 
@@ -24,4 +24,20 @@ export function SomenteVisitante({ children }: { children: ReactNode }) {
   const local = useLocation();
   const destino = (local.state as { de?: string } | null)?.de ?? "/";
   return usuario ? <Navigate to={destino} replace /> : children;
+}
+
+/**
+ * Rota de layout da área administrativa: só papel `admin`; quem não é volta ao
+ * Início, sem alarde.
+ *
+ * ⚠️ O `<Outlet>` REPASSA o contexto do `RailLayout`. Um `<Outlet />` sem
+ * `context` entrega contexto vazio às telas de baixo, e o `PageShell` monta o
+ * cabeçalho sem conta e sem "Sair".
+ */
+export function RotaAdmin() {
+  const usuario = useSessao();
+  const contexto = useOutletContext();
+  if (!usuario) return <Navigate to="/entrar" replace />;
+  if (usuario.papel !== "admin") return <Navigate to="/" replace />;
+  return <Outlet context={contexto} />;
 }

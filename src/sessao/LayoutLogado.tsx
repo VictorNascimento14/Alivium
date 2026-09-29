@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { sair } from "@/dados/usuarios";
 import { RailLayout, toast } from "@/ui";
 import type { Conta } from "@/ui";
-import { BARRA_CELULAR, GRUPOS } from "../navegacao";
+import { BARRA_CELULAR, gruposPara } from "../navegacao";
 import { useSessao } from "./useSessao";
 
 /**
@@ -34,5 +34,12 @@ export default function LayoutLogado() {
     toast("Até logo", "Volte quando quiser. Este espaço continua aqui.");
   }, [navegar]);
 
-  return <RailLayout grupos={GRUPOS} barraCelular={BARRA_CELULAR} conta={conta} onSair={onSair} />;
+  return (
+    <RailLayout
+      grupos={gruposPara(usuario?.papel ?? "pessoa")}
+      barraCelular={BARRA_CELULAR}
+      conta={conta}
+      onSair={onSair}
+    />
+  );
 }
