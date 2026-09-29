@@ -22,5 +22,23 @@ export const GRUPOS: GrupoNav[] = [
   },
 ];
 
+/** Só aparece para o papel `admin` — ver `gruposPara`. */
+export const GRUPO_ADMIN: GrupoNav = {
+  chave: "admin",
+  rotulo: "Administração",
+  itens: [{ key: "admin", label: "Painel", path: "/admin", icon: "shield-check", exact: true }],
+};
+
+const GRUPOS_ADMIN = [...GRUPOS, GRUPO_ADMIN];
+
+/**
+ * Os grupos de cada papel. Devolve sempre a MESMA referência por papel: o
+ * `RailLayout` refaz o contexto quando `grupos` muda, e uma lista nova a cada
+ * render remontaria a coluna.
+ */
+export function gruposPara(papel: "pessoa" | "admin"): GrupoNav[] {
+  return papel === "admin" ? GRUPOS_ADMIN : GRUPOS;
+}
+
 /** Destinos da barra de baixo do celular, na ordem em que aparecem. */
 export const BARRA_CELULAR = ["inicio", "conteudos", "jornadas", "diario", "progresso"];
