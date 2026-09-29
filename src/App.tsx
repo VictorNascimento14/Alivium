@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ToastHost } from "@/ui";
+import AdminCategorias from "./paginas/admin/AdminCategorias";
 import PainelAdmin from "./paginas/admin/PainelAdmin";
 import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
@@ -61,7 +62,10 @@ const router = createBrowserRouter([
         // Área administrativa: mesma coluna, guarda de papel por cima.
         path: "/admin",
         element: <RotaAdmin />,
-        children: [{ index: true, element: <PainelAdmin /> }],
+        children: [
+          { index: true, element: <PainelAdmin /> },
+          { path: "categorias", element: <AdminCategorias /> },
+        ],
       },
     ],
   },
