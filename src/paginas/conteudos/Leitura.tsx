@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import AvisoApoio from "@/componentes/AvisoApoio";
 import ConteudoCard from "@/componentes/ConteudoCard";
 import CorpoDoConteudo from "@/componentes/CorpoDoConteudo";
+import GuiaDeRespiracao from "@/componentes/GuiaDeRespiracao";
 import { linkDeConteudo } from "@/componentes/linkDeConteudo";
 import { TONS } from "@/componentes/tons";
 import { alternarSalvo, concluirConteudo, desfazerConclusao } from "@/dados/progresso";
@@ -158,6 +159,12 @@ export default function Leitura() {
             )}
           </div>
         </GlassCard>
+
+        {conteudo.tipo === "respiracao" && (
+          <div className="mt-3.5">
+            <GuiaDeRespiracao />
+          </div>
+        )}
 
         <div className="mt-3.5">
           <AvisoApoio delay={stagger(1)} />
