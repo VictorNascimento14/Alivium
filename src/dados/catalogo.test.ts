@@ -2,16 +2,24 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import {
   alternarPublicacao,
+  alternarPublicacaoJornada,
   apagarCategoria,
   apagarConteudo,
   corpoDeTexto,
   salvarCategoria,
   salvarConteudo,
+  salvarJornada,
   textoDeCorpo,
 } from "./catalogo";
-import { lerEstado, restaurarSementes } from "./repositorio";
+import { alternarEtapa, andamento } from "./jornadas";
+import { lerEstado, progressoDe, restaurarSementes } from "./repositorio";
 
-const nova = { nome: "Movimento", descricao: "Corpo em movimento gentil.", icone: "ri-run-line", tom: "verde" as const };
+const nova = {
+  nome: "Movimento",
+  descricao: "Corpo em movimento gentil.",
+  icone: "ri-run-line",
+  tom: "verde" as const,
+};
 
 describe("categorias", () => {
   beforeEach(() => restaurarSementes());
@@ -75,5 +83,38 @@ describe("conteúdos", () => {
     const etapa = lerEstado().jornadas.find((j) => j.id === "j-respiro")!.etapas[0];
     expect(etapa.id).toBe("e1");
     expect(etapa.conteudoId).toBeUndefined();
+  });
+});
+
+describe("jornadas", () => {
+  beforeEach(() => restaurarSementes());
+
+  it("editar preserva os ids das etapas — e o progresso de quem estava no meio", () => {
+    alternarEtapa("u-pessoa", "j-noites", "e2");
+    const j = lerEstado().jornadas.find((x) => x.id === "j-noites")!;
+    const dados = { titulo: j.titulo, descricao: j.descricao, tom: j.tom, icone: j.icone, publicada: j.publicada };
+    // Reordena, edita o texto e acrescenta uma etapa nova (sem id).
+    const etapas = [
+      j.etapas[1],
+      { ...j.etapas[0], titulo: "Montar o ritual (revisto)" },
+      ...j.etapas.slice(2),
+      { id: "", titulo: "Nova", proposta: "Uma proposta nova." },
+    ];
+    expect(salvarJornada({ ...dados, etapas }, j.id).ok).toBe(true);
+    const depois = lerEstado().jornadas.find((x) => x.id === "j-noites")!;
+    expect(depois.etapas.slice(0, 4).map((e) => e.id)).toEqual(["e2", "e1", "e3", "e4"]);
+    expect(depois.etapas[4].id).toMatch(/^e-/);
+    expect(andamento(progressoDe(lerEstado(), "u-pessoa"), depois).feitas).toBe(1);
+  });
+
+  it("valida etapas e publica/despublica", () => {
+    const base = { titulo: "Teste", descricao: "", tom: "verde" as const, icone: "ri-leaf-line", publicada: false };
+    expect(salvarJornada({ ...base, etapas: [] }).ok).toBe(false);
+    expect(salvarJornada({ ...base, etapas: [{ id: "", titulo: "Um", proposta: "curta" }] }).ok).toBe(true);
+    expect(salvarJornada({ ...base, etapas: [{ id: "", titulo: "Um", proposta: "ok ok", conteudoId: "x" }] }).ok).toBe(
+      false,
+    );
+    alternarPublicacaoJornada("j-noites");
+    expect(lerEstado().jornadas.find((x) => x.id === "j-noites")?.publicada).toBe(false);
   });
 });

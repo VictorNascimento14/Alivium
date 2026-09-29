@@ -3,7 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastHost } from "@/ui";
 import AdminCategorias from "./paginas/admin/AdminCategorias";
 import AdminConteudos from "./paginas/admin/AdminConteudos";
+import AdminJornadas from "./paginas/admin/AdminJornadas";
 import EditorConteudo from "./paginas/admin/EditorConteudo";
+import EditorJornada from "./paginas/admin/EditorJornada";
 import PainelAdmin from "./paginas/admin/PainelAdmin";
 import Cadastro from "./paginas/autenticacao/Cadastro";
 import Entrar from "./paginas/autenticacao/Entrar";
@@ -70,6 +72,8 @@ const router = createBrowserRouter([
           { path: "conteudos", element: <AdminConteudos /> },
           // `novo` e um id caem na mesma tela: `EditorConteudo` decide pelo parâmetro.
           { path: "conteudos/:id", element: <EditorConteudo /> },
+          { path: "jornadas", element: <AdminJornadas /> },
+          { path: "jornadas/:id", element: <EditorJornada /> },
         ],
       },
     ],

@@ -30,6 +30,7 @@ export const GRUPO_ADMIN: GrupoNav = {
     { key: "admin", label: "Painel", path: "/admin", icon: "shield-check", exact: true },
     { key: "admin-categorias", label: "Categorias", path: "/admin/categorias", icon: "grid" },
     { key: "admin-conteudos", label: "Conteúdos", path: "/admin/conteudos", icon: "book" },
+    { key: "admin-jornadas", label: "Jornadas", path: "/admin/jornadas", icon: "compass" },
   ],
 };
 

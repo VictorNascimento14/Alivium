@@ -1,5 +1,5 @@
 import { agora, atualizar, lerEstado, novoId } from "./repositorio";
-import type { Categoria, Conteudo } from "./tipos";
+import type { Categoria, Conteudo, Jornada } from "./tipos";
 
 // Escrita do catálogo (categorias, conteúdos, jornadas) — só a área
 // administrativa chama. A guarda de papel está na rota; a validação, aqui.
@@ -108,4 +108,59 @@ export function apagarConteudo(id: string): void {
       etapas: j.etapas.map((et) => (et.conteudoId === id ? { ...et, conteudoId: undefined } : et)),
     })),
   }));
+}
+
+// ── Jornadas ─────────────────────────────────────────────────────────────────
+
+export type DadosJornada = Omit<Jornada, "id" | "criadoEm">;
+
+export function validarJornada(j: DadosJornada): string | null {
+  if (j.titulo.trim().length < 3 || j.titulo.trim().length > 60) return "O título precisa ter de 3 a 60 caracteres.";
+  if (j.descricao.trim().length > 160) return "A descrição vai até 160 caracteres.";
+  if (!/^ri-[a-z0-9-]+$/.test(j.icone)) return "Escolha um ícone.";
+  if (j.etapas.length === 0) return "A jornada precisa de ao menos uma etapa.";
+  const ids = new Set(lerEstado().conteudos.map((c) => c.id));
+  for (const [i, e] of j.etapas.entries()) {
+    if (e.titulo.trim().length < 2 || e.titulo.trim().length > 60) return `Etapa ${i + 1}: título de 2 a 60 caracteres.`;
+    if (e.proposta.trim().length < 5 || e.proposta.trim().length > 200) return `Etapa ${i + 1}: proposta de 5 a 200 caracteres.`;
+    if (e.conteudoId && !ids.has(e.conteudoId)) return `Etapa ${i + 1}: o conteúdo escolhido não existe mais.`;
+  }
+  return null;
+}
+
+/**
+ * Cria ou edita. Etapa nova ganha id; etapa existente MANTÉM o dela — o
+ * progresso das pessoas é guardado por `jornada/etapa`, e trocar o id apagaria
+ * o caminho de quem já estava no meio.
+ */
+export function salvarJornada(j: DadosJornada, id?: string): Resultado {
+  const erro = validarJornada(j);
+  if (erro) return { ok: false, erro };
+  const limpa: DadosJornada = {
+    ...j,
+    titulo: j.titulo.trim(),
+    descricao: j.descricao.trim(),
+    etapas: j.etapas.map((e) => ({
+      id: e.id || novoId("e"),
+      titulo: e.titulo.trim(),
+      proposta: e.proposta.trim(),
+      conteudoId: e.conteudoId || undefined,
+    })),
+  };
+  const alvo = id ?? novoId("j");
+  atualizar((e) => ({
+    ...e,
+    jornadas: id
+      ? e.jornadas.map((k) => (k.id === id ? { ...k, ...limpa } : k))
+      : [...e.jornadas, { ...limpa, id: alvo, criadoEm: agora() }],
+  }));
+  return { ok: true, id: alvo };
+}
+
+export function alternarPublicacaoJornada(id: string): void {
+  atualizar((e) => ({ ...e, jornadas: e.jornadas.map((k) => (k.id === id ? { ...k, publicada: !k.publicada } : k)) }));
+}
+
+export function apagarJornada(id: string): void {
+  atualizar((e) => ({ ...e, jornadas: e.jornadas.filter((k) => k.id !== id) }));
 }
